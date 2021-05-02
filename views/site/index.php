@@ -19,9 +19,10 @@ $this->title = 'My Yii Application';
                             value="https://preview.colorlib.com/theme/startup2/"
                             class="form-control"
                             placeholder="URL of landing page"
+                            id="url"
                         >
                         <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">Go!</button>
+                        <button class="btn btn-default" id="parse" type="button">Go!</button>
                     </span>
                     </div>
                 </div>
@@ -31,3 +32,25 @@ $this->title = 'My Yii Application';
     </div>
 
 </div>
+
+<?php
+
+$js = <<<JS
+
+$('#parse').click(function(){
+    let url = $('#url').val()
+    
+    if(url[url.length - 1] !== '/'){
+        url += '/'
+    }
+
+    $.post('/site/download', {url}, (res) =>{
+        console.log(res)
+    })
+})
+
+
+JS;
+$this->registerJs($js);
+
+?>
