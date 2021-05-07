@@ -17,7 +17,7 @@ class Parser extends Model
 {
     const CSS_PARSE_IMG_REGX = '/url\(([\s])?([\"|\'])?(.*?)([\"|\'])?([\s])?\)/i';
     const FOLDER_TO_SAVE = 'download/';
-    const TIME_LIMIT = 180;
+    const TIME_LIMIT = 380;
 
     public $dom;
     public $save_dir;
