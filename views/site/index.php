@@ -25,6 +25,8 @@ $this->title = 'My Yii Application';
                         <button class="btn btn-default" id="parse" type="button">Go!</button>
                     </span>
                     </div>
+
+                    <h2 id="loading" style="display: none">Идет скачивание...</h2>
                 </div>
             </div>
         <?php  \yii\widgets\ActiveForm::end() ?>
@@ -39,15 +41,29 @@ $js = <<<JS
 
 $('#parse').click(function(){
     let url = $('#url').val()
-    
+
     if(url[url.length - 1] !== '/'){
         url += '/'
     }
-
+    $('#loading').show()
     $.post('/site/download', {url}, (res) =>{
+        $('#loading').hide()
         console.log(res)
+        if(res.status){
+            download(res.link)
+        }
+       
     })
 })
+
+function download(link) {
+  var element = document.createElement('a');
+  element.setAttribute('href', link);
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
 
 
 JS;

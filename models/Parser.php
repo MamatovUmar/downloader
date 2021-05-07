@@ -10,6 +10,7 @@ use Throwable;
 use Yii;
 use yii\base\Model;
 use linslin\yii2\curl;
+use yii\helpers\Url;
 use ZipArchive;
 
 class Parser extends Model
@@ -21,6 +22,7 @@ class Parser extends Model
     public $dom;
     public $save_dir;
     public $zip_path;
+    public $download_link;
     public $url;
     public $response;
     public $project_name;
@@ -46,6 +48,7 @@ class Parser extends Model
 
         $this->save_dir = PROJECT_DIR . '/' . self::FOLDER_TO_SAVE . $this->project_name . '/';
         $this->zip_path = PROJECT_DIR . '/' . self::FOLDER_TO_SAVE . $this->project_name . '.zip';
+        $this->download_link = Url::base(true) . '/' . self::FOLDER_TO_SAVE . $this->project_name . '.zip';
 
         mkdir( $this->save_dir, 0755, true );
     }
@@ -86,7 +89,7 @@ class Parser extends Model
                 mkdir( $dir, 0755, true );
             file_put_contents( strtok($fullPath, '?'), $content, $flags );
         }catch (Throwable $e){
-            echo $content_path . "<br/>";
+//            echo $content_path . "<br/>";
         }
     }
 

@@ -72,18 +72,18 @@ class SiteController extends Controller
         set_time_limit(Parser::TIME_LIMIT);
 
         $model = new Parser();
-//        try {
+        try {
             $model->parseRun();
             return [
                 'status' => true,
-                'link' => $model->zip_path
+                'link' => $model->download_link
             ];
-//        }catch (\Exception $e){
-//            return [
-//                'status' => false,
-//                'message' => $e
-//            ];
-//        }
+        }catch (\Exception $e){
+            return [
+                'status' => false,
+                'message' => $e
+            ];
+        }
     }
 
 
