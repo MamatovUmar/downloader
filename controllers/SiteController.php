@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Landings;
 use Throwable;
 use Yii;
+use yii\base\ErrorException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -72,13 +74,19 @@ class SiteController extends Controller
         set_time_limit(Parser::TIME_LIMIT);
 
         $model = new Parser();
+        $landing = new Landings();
+
         try {
             $model->parseRun();
+            $landing->newLanding($model);
+
             return [
                 'status' => true,
                 'link' => $model->download_link
             ];
-        }catch (\Exception $e){
+        }catch (ErrorException $e){
+            $landing->parseError($e);
+
             return [
                 'status' => false,
                 'message' => $e

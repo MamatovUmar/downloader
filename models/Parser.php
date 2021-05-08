@@ -54,7 +54,7 @@ class Parser extends Model
     }
 
     /**
-     * получение списка изображений в css файлах
+     * получение списка изображений из css файлов
      *
      * @param $file
      * @return array|array[]|string[]|\string[][]

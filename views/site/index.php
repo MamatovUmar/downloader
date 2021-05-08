@@ -34,39 +34,3 @@ $this->title = 'My Yii Application';
     </div>
 
 </div>
-
-<?php
-
-$js = <<<JS
-
-$('#parse').click(function(){
-    let url = $('#url').val()
-
-    if(url[url.length - 1] !== '/'){
-        url += '/'
-    }
-    $('#loading').show()
-    $.post('/site/download', {url}, (res) =>{
-        $('#loading').hide()
-        console.log(res)
-        if(res.status){
-            download(res.link)
-        }
-       
-    })
-})
-
-function download(link) {
-  var element = document.createElement('a');
-  element.setAttribute('href', link);
-  element.style.display = 'none';
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
-}
-
-
-JS;
-$this->registerJs($js);
-
-?>
