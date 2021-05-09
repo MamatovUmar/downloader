@@ -1,9 +1,10 @@
 <?php
 
 // comment out the following two lines when deployed to production
+//if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
-
+//}
 defined('PROJECT_DIR') or define('PROJECT_DIR', __DIR__);
 
 require __DIR__ . '/../components/functions.php';

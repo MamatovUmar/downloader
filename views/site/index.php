@@ -16,7 +16,7 @@ $this->title = 'My Yii Application';
                     <div class="input-group">
                         <input
                             type="text" name="url"
-                            value="https://preview.colorlib.com/theme/startup2/"
+                            value="https://s7template.com/tf/proone/preview/index-2.html"
                             class="form-control"
                             placeholder="URL of landing page"
                             id="url"

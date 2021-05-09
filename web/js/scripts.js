@@ -9,12 +9,17 @@ function download(link) {
 
 $('#parse').click(function(){
     let url = $('#url').val()
+    let file_name = ''
 
-    if(url[url.length - 1] !== '/'){
+    if(url.substr(-5) === '.html'){
+        let arr = url.split('/')
+        file_name = arr[arr.length - 1]
+        url = url.replace(file_name, '')
+    }else if(url[url.length - 1] !== '/'){
         url += '/'
     }
     $('#loading').show()
-    $.post('/site/download', {url}, (res) =>{
+    $.post('/site/download', {url, file_name}, (res) =>{
         $('#loading').hide()
         if(res.status){
             download(res.link)

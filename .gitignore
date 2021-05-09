@@ -8,6 +8,8 @@ nbproject
 .buildpath
 .project
 .settings
+.env
+.env.prod
 
 # windows thumbnail cache
 Thumbs.db

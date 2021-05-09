@@ -82,14 +82,16 @@ class SiteController extends Controller
 
             return [
                 'status' => true,
-                'link' => $model->download_link
+                'link' => $model->download_link,
+                'errors' => $model->errors
             ];
         }catch (ErrorException $e){
             $landing->parseError($e);
 
             return [
                 'status' => false,
-                'message' => $e
+                'message' => $e,
+                'errors' => $model->errors
             ];
         }
     }

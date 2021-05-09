@@ -17,7 +17,7 @@ class Parser extends Model
 {
     const CSS_PARSE_IMG_REGX = '/url\(([\s])?([\"|\'])?(.*?)([\"|\'])?([\s])?\)/i';
     const FOLDER_TO_SAVE = 'download/';
-    const TIME_LIMIT = 380;
+    const TIME_LIMIT = 0;
 
     public $dom;
     public $save_dir;
@@ -26,15 +26,20 @@ class Parser extends Model
     public $url;
     public $response;
     public $project_name;
+    public $errors = [];
 
     public function __construct()
     {
         $this->url = Yii::$app->request->post('url');
+        $page_name = Yii::$app->request->post('file_name');
 
         $curl = new curl\Curl();
-        $this->response = $curl->get($this->url);
+        $this->response = $curl->get($this->url . $page_name);
+//        $this->response = file_get_contents($this->url . $page_name);
+//        dump($this->response);
 
         $this->dom = \phpQuery::newDocument($this->response);
+//        $this->dom = \phpQuery::newDocument($load_data->find("html:last"));
         $this->generatePathToSave();
 
         parent::__construct();
@@ -59,17 +64,41 @@ class Parser extends Model
      * @param $file
      * @return array|array[]|string[]|\string[][]
      */
-    public function cssImageParser($file, $get_content = true) {
+    public function cssParser($file, $get_content = true) {
         if($get_content){
-            $content = file_get_contents($file);
+            $content = file_get_contents($this->url . $file);
         }else{
             $content = $file;
         }
         if (!preg_match_all(self::CSS_PARSE_IMG_REGX, $content, $arr)) return array();
 
-        return array_map(function($val) {
-            return str_replace('../', '', $val);
-        }, $arr[3]);
+        $result = [];
+        foreach ($arr[3] as $val) {
+            if(filter_var($file, FILTER_VALIDATE_URL)){
+               continue;
+            }
+            if(!$get_content){
+                $result[] = $val;
+                continue;
+            }
+                $arr = explode('/', $file);
+            if(substr($val, 0, 2) === './') {
+                $arr[count($arr) - 1] = str_replace('./', '', $val);
+                $result[] = implode('/', $arr);
+            }else if(!in_array(substr($val, 0, 1), ['.', '/'])){
+                $arr[count($arr) - 1] = $val;
+                $result[] = implode('/', $arr);
+            }else if(str_contains($val, '../')){
+                $dot_count = substr_count($val, "../");
+                $new_file = str_replace('../', '', $val);
+
+                $arr = explode('/', $file);
+                array_splice($arr, -($dot_count + 1));
+                $arr[] = $new_file;
+                $result[] = implode('/', $arr);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -89,7 +118,7 @@ class Parser extends Model
                 mkdir( $dir, 0755, true );
             file_put_contents( strtok($fullPath, '?'), $content, $flags );
         }catch (Throwable $e){
-//            echo $content_path . "<br/>";
+            $this->errors[] = $content_path;
         }
     }
 
@@ -97,7 +126,7 @@ class Parser extends Model
         $images = [];
         // get images from inline styles
         foreach ($this->dom->find("[style]") as $item) {
-            $images[] = $this->cssImageParser(pq($item)->attr('style'), false)[0] ?? null;
+            $images[] = $this->cssParser(pq($item)->attr('style'), false)[0] ?? null;
         }
 
         //  get images from tag img
@@ -117,7 +146,7 @@ class Parser extends Model
 
             $path_parts = pathinfo($this->save_dir . $file);
             if($path_parts['extension'] == 'css'){
-                $files = array_merge($files, $this->cssImageParser($this->url . $file));
+                $files = array_merge($files, $this->cssParser($file));
             }
         }
 

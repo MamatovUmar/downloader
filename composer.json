@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "electrolinux/phpquery": "^0.9.6",
         "linslin/yii2-curl": "*",
-        "sabberworm/php-css-parser": "*"
+        "sabberworm/php-css-parser": "*",
+        "yiithings/yii2-dotenv": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
