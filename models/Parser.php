@@ -10,6 +10,7 @@ use Throwable;
 use Yii;
 use yii\base\Model;
 use linslin\yii2\curl;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use ZipArchive;
 
@@ -33,12 +34,13 @@ class Parser extends Model
         $this->url = Yii::$app->request->post('url');
         $page_name = Yii::$app->request->post('file_name');
 
-        $curl = new curl\Curl();
-        $this->response = $curl->get($this->url . $page_name);
-//        $this->response = file_get_contents($this->url . $page_name);
-//        dump($this->response);
+        // $curl = new curl\Curl();
+        // $this->response = $curl->get($this->url . $page_name);
+       $this->response = file_get_contents($this->url . $page_name);
 
         $this->dom = \phpQuery::newDocument($this->response);
+        $this->dom->find('base')->remove();
+        // dump(Html::encode(pq($this->dom)->html()));
 //        $this->dom = \phpQuery::newDocument($load_data->find("html:last"));
         $this->generatePathToSave();
 
@@ -131,7 +133,10 @@ class Parser extends Model
 
         //  get images from tag img
         foreach($this->dom->find("img") as $value){
-            $images[] = pq($value)->attr('src');
+            $images[] = $image = pq($value)->attr('src');
+            if(substr($image, 0, 1) === '/' && substr($image, 0, 2) !== '//'){
+                pq($value)->attr('src', substr($image, 1));
+            }
         }
 
         return array_filter($images);
@@ -142,7 +147,12 @@ class Parser extends Model
 
         //  get css files
         foreach($this->dom->find("link") as $value){
-            $files[] = $file = pq($value)->attr('href');
+            $pq = pq($value);
+
+            $files[] = $file = $this->urlReplace($pq->attr('href'));
+            if(substr($file, 0, 1) === '/' && substr($file, 0, 2) !== '//'){
+                $pq->attr('href', substr($file, 1));
+            }
 
             $path_parts = pathinfo($this->save_dir . $file);
             if($path_parts['extension'] == 'css'){
@@ -152,7 +162,11 @@ class Parser extends Model
 
         //  get js files
         foreach($this->dom->find("script") as $value){
-            $files[] = pq($value)->attr('src');
+            $pq = pq($value);
+            $files[] = $script = $this->urlReplace($pq->attr('src'));
+            if(substr($script, 0, 1) === '/' && substr($script, 0, 2) !== '//'){
+                $pq->attr('src', substr($script, 1));
+            }
         }
 
         return array_filter($files);
@@ -201,6 +215,13 @@ class Parser extends Model
         return rmdir($dir);
     }
 
+    /**
+     * удаляет базовый url из строки
+     */
+    public function urlReplace($str){
+        return str_replace($this->url, '', $str);
+    }
+
 
     /**
      * запуск скачивание файлов лендинга
@@ -211,12 +232,13 @@ class Parser extends Model
 
         //  download files
         foreach ($files as $file){
+            $file = str_replace($this->url, '', $file);
             if(!filter_var($file, FILTER_VALIDATE_URL)){  // if no cdn
                 $this->saveFile($this->save_dir . $file, $this->url . $file, LOCK_EX);
             }
         }
 
-        file_put_contents( $this->save_dir . "index.html", $this->response);
+        file_put_contents( $this->save_dir . "index.html", pq($this->dom)->html());
 
         $this->createZipFile();
         $this->removeTree($this->save_dir);
