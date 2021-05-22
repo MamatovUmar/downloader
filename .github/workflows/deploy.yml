@@ -15,16 +15,6 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@master
-
-      - name: Setup Enviroment
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "7.3"
-
-      - name: Install Packages
-        run: composer update
 
       - name: Deploy to Server
         uses: yiier/yii2-base-deploy@master
@@ -36,3 +26,9 @@ jobs:
           run: ls
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          
+      - name: Checkout Repository
+        uses: actions/checkout@master
+        
+      - name: Install Packages
+        run: composer update
