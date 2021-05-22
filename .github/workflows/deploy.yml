@@ -33,5 +33,6 @@ jobs:
           host: 62.109.14.44
           path: /var/www/www-root/data/www/download.datasource.uz/
           owner: root
+          script: ls
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
