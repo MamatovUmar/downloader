@@ -35,4 +35,4 @@ jobs:
           user: root
           host: 62.109.14.44
           path: /var/www/www-root/data/www/download.datasource.uz/
-          owner: root
+          owner: owner
