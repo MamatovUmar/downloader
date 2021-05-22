@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build-and-Deploy
 env:
   ENV: prod
   DB_NAME: downloader
