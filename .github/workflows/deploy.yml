@@ -21,7 +21,7 @@ jobs:
       - name: Setup Enviroment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.1"
+          php-version: "7.2"
 
       - name: Speed up the packages installation process
         run: composer global require hirak/prestissimo
