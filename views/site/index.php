@@ -7,7 +7,7 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="text-center">
-        <h1>Congratulations!</h1>
+        <h1>Congratulationss!</h1>
 
         <form action="<?= \yii\helpers\Url::to(['site/download']) ?>" method="post">
             <?php $form = \yii\widgets\ActiveForm::begin() ?>
