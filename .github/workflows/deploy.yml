@@ -27,7 +27,7 @@ jobs:
         run: composer global require hirak/prestissimo
 
       - name: Install Packages
-        run: composer install --no-dev
+        run: composer install
 
       - name: Deploy to Server
         uses: yiier/yii2-base-deploy@master
