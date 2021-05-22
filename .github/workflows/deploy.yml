@@ -23,9 +23,6 @@ jobs:
         with:
           php-version: "7.2"
 
-      - name: Speed up the packages installation process
-        run: composer global require hirak/prestissimo
-
       - name: Install Packages
         run: composer install
 
