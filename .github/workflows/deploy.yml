@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build and Deploy
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
