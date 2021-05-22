@@ -1,0 +1,41 @@
+name: Build and Deploy
+env:
+  ENV: prod
+  DB_NAME: downloader
+  DB_USER_NAME: downloader
+  DB_PASSWORD: K6r3X0i5
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Setup Enviroment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.3"
+
+      - name: Speed up the packages installation process
+        run: composer global require hirak/prestissimo
+
+      - name: Install Packages
+        run: composer install --no-dev
+
+      - name: Deploy to Server
+        uses: yiier/yii2-base-deploy@master
+        with:
+          user: root
+          host: 62.109.14.44
+          path: /var/www/www-root/data/www/download.datasource.uz/
+          owner: root
+
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
