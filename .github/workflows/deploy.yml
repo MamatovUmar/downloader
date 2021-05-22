@@ -35,4 +35,4 @@ jobs:
           owner: root
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-      - run: ls
+      - run: ls -a
