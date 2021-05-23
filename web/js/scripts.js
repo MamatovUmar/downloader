@@ -22,7 +22,7 @@ $('#parse').click(function(){
     $.post('/site/download', {url, file_name}, (res) =>{
         $('#loading').hide()
         if(res.status){
-            download(res.link)
+            // download(res.link)
         }
 
     })

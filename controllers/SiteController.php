@@ -3,18 +3,13 @@
 namespace app\controllers;
 
 use app\models\Landings;
-use Throwable;
 use Yii;
 use yii\base\ErrorException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use linslin\yii2\curl;
 use app\models\Parser;
-use yii\helpers\Html;
-
-require_once "simple_html_dom.php";
 
 class SiteController extends Controller
 {
@@ -67,31 +62,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $patterns = [
-            '/<(base)[^>]*>/i'
-        ];
-
-        
-        // $html = file_get_html('https://woodland-mebel.ru/');
-        // foreach($html->find('base') as $element)
-        //     echo $element->href . '<br>';
-        // dump($file->find('base'));
-        // dump(Html::encode($file));
-        // $file = Html::encode(file_get_contents('https://woodland-mebel.ru/'));
-
-
-        // $file = '<!-- End Google Tag Manager -->
-
-        // <base href="//woodland-mebel.ru">fgdf
-        // <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">';
-
-
-        // $p = '/<(base)[^>]*>/i';
-        // dump(preg_replace($p, '', $file));
-
-
-
-
         return $this->render('index');
     }
 
